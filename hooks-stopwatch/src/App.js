@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './App.css';
 
 function App() {
@@ -15,31 +15,37 @@ function App() {
   }
   const [lapse, setLapse] = useState(0);
   const [running, setRunning] = useState(false);
+  const intervalRef = useRef(null);
 
-  const startStop = () => {
+  const handleStartStop = () => {
     if (running) {
-      clearInterval();
+      // do something to stop running
+      // need interval ID to pass into clearInterval, so we know which interval to clear
+      clearInterval(intervalRef.current);
     } else {
+      // if not running, we want it to run, so we need to see the time change
       const startTime = Date.now() - lapse;
-      setInterval(() => {
+      
+      // set intervalRef to this specific setInterval
+      intervalRef.current = setInterval(() => {
         setLapse(Date.now() - startTime)
-      }, 0)
+      }, 0) // 0 so callback is called as quick as possible
     }
     setRunning(!running);
   }
 
-  const clear = () => {
-    setLapse(0)
+  const handleClear = () => {
+    clearInterval(intervalRef.current);
+    setLapse(0);
+    setRunning(false);
   }
   
-  console.log("Running", running)
-
   return (
     <div className="App">
       <h2>STOPWATCH</h2>
       <h1>{lapse} ms</h1>
-      <button style={buttonStyle} onClick={startStop}>{running ? "STOP" : "START"}</button>
-      <button style={buttonStyle} onClick={clear}>CLEAR</button>
+      <button style={buttonStyle} onClick={handleStartStop}>{running ? "STOP" : "START"}</button>
+      <button style={buttonStyle} onClick={handleClear}>CLEAR</button>
 
     </div>
   );
