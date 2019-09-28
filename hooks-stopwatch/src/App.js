@@ -1,11 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 
-
 // Custom Hook:
 function useButtons() {
-
-
   const [lapse, setLapse] = useState(0);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef(null);
@@ -48,14 +45,18 @@ function useButtons() {
   };
 
   // return the items you need or will reference in JSX
-  return {lapse, running, handleStartStop, handleClear}
-  
+  return { lapse, running, handleStartStop, handleClear };
 }
 
 function App() {
+
+  const stopwatchDiv = {
+    background: "#F3F2EC",
+    padding: "2px 0 3%"
+  }
   const buttonStyle = {
     display: "block",
-    margin: "0 auto 10px",
+    margin: "10px auto 0",
     width: "200px",
     height: "50px",
     background: "indigo",
@@ -65,38 +66,48 @@ function App() {
     color: "#D175F0"
   };
 
+  const lapseDiffBorder = {
+    border: "20px 0",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "50px",
+    margin: "20px auto",
+    fontSize: "18px",
+    background: "#F3ECF0"
+  };
+
   // to use custom hook
   const stopwatchOne = useButtons();
   const stopwatchTwo = useButtons();
 
   return (
-
     <div className="App">
-      <h2>STOPWATCH</h2>
-      <div className="stopwatch-one">
-      <h1>{stopwatchOne.lapse} ms</h1>
-      <button style={buttonStyle} onClick={stopwatchOne.handleStartStop}>
-        {stopwatchOne.running ? "STOP" : "START"}
-      </button>
-      <button style={buttonStyle} onClick={stopwatchOne.handleClear}>
-        CLEAR
-      </button>
+      <h1>HOOKS <br></br>STOPWATCH</h1>
+      <div className="stopwatch-one" style={stopwatchDiv}>
+        <h1>{stopwatchOne.lapse} ms</h1>
+        <button style={buttonStyle} onClick={stopwatchOne.handleStartStop}>
+          {stopwatchOne.running ? "STOP" : "START"}
+        </button>
+        <button style={buttonStyle} onClick={stopwatchOne.handleClear}>
+          CLEAR
+        </button>
       </div>
 
-      <div className="time-difference">
-        <p>{stopwatchOne.lapse - stopwatchTwo.lapse} ms</p>
+      <div className="time-difference" style={lapseDiffBorder}>
+        <p>Lapse Difference: {(stopwatchOne.lapse - stopwatchTwo.lapse)/1000} seconds</p>
       </div>
 
-      <div className="stopwatch-two">
-      <h1>{stopwatchTwo.lapse} ms</h1>
-      <button style={buttonStyle} onClick={stopwatchTwo.handleStartStop}>
-        {stopwatchTwo.running ? "STOP" : "START"}
-      </button>
-      <button style={buttonStyle} onClick={stopwatchTwo.handleClear}>
-        CLEAR
-      </button>
+      <div className="stopwatch-two" style={stopwatchDiv}>
+        <h1>{stopwatchTwo.lapse} ms</h1>
+        <button style={buttonStyle} onClick={stopwatchTwo.handleStartStop}>
+          {stopwatchTwo.running ? "STOP" : "START"}
+        </button>
+        <button style={buttonStyle} onClick={stopwatchTwo.handleClear}>
+          CLEAR
+        </button>
       </div>
-      
     </div>
   );
 }
