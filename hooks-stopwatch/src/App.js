@@ -1,18 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 
-function App() {
-  const buttonStyle = {
-    display: "block",
-    margin: "0 auto 10px",
-    width: "200px",
-    height: "50px",
-    background: "indigo",
-    fontSize: "25px",
-    borderRadius: "5px",
-    fontWeight: "700",
-    color: "#D175F0"
-  };
+
+// Custom Hook:
+function useButtons() {
+
+
   const [lapse, setLapse] = useState(0);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef(null);
@@ -54,16 +47,56 @@ function App() {
     setRunning(false);
   };
 
+  // return the items you need or will reference in JSX
+  return {lapse, running, handleStartStop, handleClear}
+  
+}
+
+function App() {
+  const buttonStyle = {
+    display: "block",
+    margin: "0 auto 10px",
+    width: "200px",
+    height: "50px",
+    background: "indigo",
+    fontSize: "25px",
+    borderRadius: "5px",
+    fontWeight: "700",
+    color: "#D175F0"
+  };
+
+  // to use custom hook
+  const stopwatchOne = useButtons();
+  const stopwatchTwo = useButtons();
+
   return (
+
     <div className="App">
       <h2>STOPWATCH</h2>
-      <h1>{lapse} ms</h1>
-      <button style={buttonStyle} onClick={handleStartStop}>
-        {running ? "STOP" : "START"}
+      <div className="stopwatch-one">
+      <h1>{stopwatchOne.lapse} ms</h1>
+      <button style={buttonStyle} onClick={stopwatchOne.handleStartStop}>
+        {stopwatchOne.running ? "STOP" : "START"}
       </button>
-      <button style={buttonStyle} onClick={handleClear}>
+      <button style={buttonStyle} onClick={stopwatchOne.handleClear}>
         CLEAR
       </button>
+      </div>
+
+      <div className="time-difference">
+        <p>{stopwatchOne.lapse - stopwatchTwo.lapse} ms</p>
+      </div>
+
+      <div className="stopwatch-two">
+      <h1>{stopwatchTwo.lapse} ms</h1>
+      <button style={buttonStyle} onClick={stopwatchTwo.handleStartStop}>
+        {stopwatchTwo.running ? "STOP" : "START"}
+      </button>
+      <button style={buttonStyle} onClick={stopwatchTwo.handleClear}>
+        CLEAR
+      </button>
+      </div>
+      
     </div>
   );
 }
